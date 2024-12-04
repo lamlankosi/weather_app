@@ -12,10 +12,12 @@ FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
 IMAGE_MAP = {
     "clear sky": "https://lamlankosi.github.io/project_images/Images/clear.png",
     "few clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
-    "scattered clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
+    "overcast clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
     "broken clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
     "shower rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
     "rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
+    "light rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
+    "moderate rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
     "thunderstorm": "https://lamlankosi.github.io/project_images/Images/snow.png",
     "snow": "https://lamlankosi.github.io/project_images/Images/snow.png",
     "mist": "https://lamlankosi.github.io/project_images/Images/cloud.png"
@@ -23,7 +25,7 @@ IMAGE_MAP = {
 
 def get_image(description):
     """Get the image URL for a given weather description."""
-    return IMAGE_MAP.get(description.lower(), "https://lamlankosi.github.io/project_images/Images/clear.png")
+    return IMAGE_MAP.get(description.lower(), "https://lamlankosi.github.io/project_images/Images/cloud.png")
 
 @app.route('/weather', methods=['GET'])
 def get_weather():
