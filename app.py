@@ -8,6 +8,23 @@ API_KEY = "1fd06231c95dbcd0fb997dd84836ab8f"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather"
 FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
+# Map descriptions to image URLs
+IMAGE_MAP = {
+    "clear sky": "https://lamlankosi.github.io/project_images/Images/clear.png",
+    "few clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
+    "scattered clouds": "https://lamlankosi.github.io/project_images/cloud.png",
+    "broken clouds": "https://lamlankosi.github.io/project_images/cloud.png",
+    "shower rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
+    "rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
+    "thunderstorm": "https://lamlankosi.github.io/project_images/Images/snow.png",
+    "snow": "https://lamlankosi.github.io/project_images/Images/snow.png",
+    "mist": "https://lamlankosi.github.io/project_images/Images/cloud.png"
+}
+
+def get_image(description):
+    """Get the image URL for a given weather description."""
+    return IMAGE_MAP.get(description.lower(), "https://lamlankosi.github.io/project_images/Images/clear.png")
+
 @app.route('/weather', methods=['GET'])
 def get_weather():
     city = request.args.get('city')
@@ -28,10 +45,14 @@ def get_weather():
             return jsonify({"error": "City not found"}), 404
 
         data = response.json()
+        description = data["weather"][0]["description"]
+        image_url = get_image(description)
+
         return jsonify({
             "city": data.get("name"),
             "temperature": data["main"]["temp"],
-            "description": data["weather"][0]["description"]
+            "description": description,
+            "image": image_url
         })
 
     except requests.exceptions.RequestException as e:
@@ -62,7 +83,8 @@ def get_forecast():
             {
                 "date_time": item["dt_txt"],
                 "temperature": item["main"]["temp"],
-                "description": item["weather"][0]["description"]
+                "description": item["weather"][0]["description"],
+                "image": get_image(item["weather"][0]["description"])
             }
             for item in data.get("list", [])
         ]
@@ -76,4 +98,5 @@ def get_forecast():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(debug=True)
