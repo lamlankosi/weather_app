@@ -58,7 +58,6 @@ def get_weather():
     except requests.exceptions.RequestException as e:
         return jsonify({"error": "Failed to fetch weather data", "details": str(e)}), 500
 
-
 @app.route('/forecast', methods=['GET'])
 def get_forecast():
     city = request.args.get('city')
@@ -79,15 +78,36 @@ def get_forecast():
             return jsonify({"error": "City not found"}), 404
 
         data = response.json()
+        
+        # Group data by day
+        daily_forecast = {}
+        for item in data.get("list", []):
+            date = item["dt_txt"].split(" ")[0]  # Extract date portion
+            if date not in daily_forecast:
+                daily_forecast[date] = {
+                    "temperature_min": item["main"]["temp_min"],
+                    "temperature_max": item["main"]["temp_max"],
+                    "description": item["weather"][0]["description"],
+                    "image": get_image(item["weather"][0]["description"])
+                }
+            else:
+                # Update min/max temperatures for the day
+                daily_forecast[date]["temperature_min"] = min(
+                    daily_forecast[date]["temperature_min"], item["main"]["temp_min"])
+                daily_forecast[date]["temperature_max"] = max(
+                    daily_forecast[date]["temperature_max"], item["main"]["temp_max"])
+
         forecast_list = [
             {
-                "date_time": item["dt_txt"],
-                "temperature": item["main"]["temp"],
-                "description": item["weather"][0]["description"],
-                "image": get_image(item["weather"][0]["description"])
+                "date": date,
+                "temperature_min": details["temperature_min"],
+                "temperature_max": details["temperature_max"],
+                "description": details["description"],
+                "image": details["image"]
             }
-            for item in data.get("list", [])
+            for date, details in daily_forecast.items()
         ]
+
         return jsonify({
             "city": data["city"]["name"],
             "forecast": forecast_list
@@ -98,5 +118,5 @@ def get_forecast():
 
 
 if __name__ == "__main__":
-    # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    # app.run(debug=True)
