@@ -12,8 +12,8 @@ FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
 IMAGE_MAP = {
     "clear sky": "https://lamlankosi.github.io/project_images/Images/clear.png",
     "few clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
-    "scattered clouds": "https://lamlankosi.github.io/project_images/cloud.png",
-    "broken clouds": "https://lamlankosi.github.io/project_images/cloud.png",
+    "scattered clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
+    "broken clouds": "https://lamlankosi.github.io/project_images/Images/cloud.png",
     "shower rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
     "rain": "https://lamlankosi.github.io/project_images/Images/rain.png",
     "thunderstorm": "https://lamlankosi.github.io/project_images/Images/snow.png",
