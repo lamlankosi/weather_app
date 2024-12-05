@@ -8,6 +8,7 @@ app = Flask(__name__)
 API_KEY = "1fd06231c95dbcd0fb997dd84836ab8f"
 CURRENT_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather"
 FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
+MAP_BASE_URL = "https://tile.openweathermap.org/map"
 
 
 IMAGE_MAP = {
@@ -128,6 +129,29 @@ def get_forecast():
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": "Failed to fetch forecast data", "details": str(e)}), 500
+
+@app.route('/map', methods=['GET'])
+def get_map():
+   
+    layer = request.args.get('layer') 
+    z = request.args.get('z') 
+    x = request.args.get('x')  
+    y = request.args.get('y')  
+
+    if not layer or not z or not x or not y:
+        return jsonify({"error": "Missing required parameters: layer, z, x, y"}), 400
+
+    try:
+        # Construct the tile URL
+        tile_url = f"{MAP_BASE_URL}/{layer}/{z}/{x}/{y}.png?appid={API_KEY}"
+        
+        return jsonify({
+            "tile_url": tile_url,
+            "instructions": "Use the tile_url in a map viewer to fetch the weather tile."
+        })
+
+    except Exception as e:
+        return jsonify({"error": "Failed to fetch map data", "details": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
