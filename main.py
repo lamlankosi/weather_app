@@ -6,6 +6,7 @@ app = Flask(__name__)
 API_URL_WEATHER = "https://weather-app-2aoc.onrender.com/weather"
 API_URL_FORECAST = "https://weather-app-2aoc.onrender.com/forecast"
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     weather_data = None
@@ -35,7 +36,8 @@ def index():
         else:
             error_message = "Please enter a city name."
 
+    # return render_template("index.html", weather_data=weather_data, forecast_data=forecast_data, error_message=error_message)
     return render_template("index.html", weather_data=weather_data, forecast_data=forecast_data, error_message=error_message)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
