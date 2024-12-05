@@ -37,7 +37,7 @@ def index():
             error_message = "Please enter a city name."
 
     # return render_template("index.html", weather_data=weather_data, forecast_data=forecast_data, error_message=error_message)
-    return render_template("index.html", weather_data=weather_data, forecast_data=forecast_data, error_message=error_message)
+    return render_template("../templates/index.html", weather_data=weather_data, forecast_data=forecast_data, error_message=error_message)
 
 if __name__ == "__main__":
     app.run(debug=False)
