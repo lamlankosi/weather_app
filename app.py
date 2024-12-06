@@ -52,7 +52,7 @@ def get_weather():
 
         return jsonify({
             "city": data.get("name"),
-            "temperature": data["main"]["temp"],
+            "temperature": round(data["main"]["temp"]), 
             "description": description,
             "image": image_url,
             "wind_speed": data["wind"]["speed"],
@@ -84,7 +84,6 @@ def get_forecast():
 
         data = response.json()
         
-       
         daily_forecast = {}
         for item in data.get("list", []):
             date = item["dt_txt"].split(" ")[0]
@@ -93,19 +92,18 @@ def get_forecast():
             if date not in daily_forecast:
                 daily_forecast[date] = {
                     "day": weekday,
-                    "temperature_min": item["main"]["temp_min"],
-                    "temperature_max": item["main"]["temp_max"],
+                    "temperature_min": round(item["main"]["temp_min"]),  
+                    "temperature_max": round(item["main"]["temp_max"]),  
                     "description": item["weather"][0]["description"],
                     "image": get_image(item["weather"][0]["description"]),
                     "wind_speed": item["wind"]["speed"],
                     "humidity": item["main"]["humidity"]
                 }
             else:
-              
                 daily_forecast[date]["temperature_min"] = min(
-                    daily_forecast[date]["temperature_min"], item["main"]["temp_min"])
+                    daily_forecast[date]["temperature_min"], round(item["main"]["temp_min"]))  
                 daily_forecast[date]["temperature_max"] = max(
-                    daily_forecast[date]["temperature_max"], item["main"]["temp_max"])
+                    daily_forecast[date]["temperature_max"], round(item["main"]["temp_max"]))  
 
         forecast_list = [
             {
@@ -130,5 +128,5 @@ def get_forecast():
         return jsonify({"error": "Failed to fetch forecast data", "details": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0", port=int(os.environ.get("PORT", 5000)))
     # app.run(debug=True)
